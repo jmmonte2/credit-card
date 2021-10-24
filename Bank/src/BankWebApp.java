@@ -10,35 +10,84 @@ public class BankWebApp {
     static int pin;
     static int counter = 0;
     static Random random = new Random();
-    static long[][] acctNumbersAndPin = new long[2][100];
+    static long[][] acctNumbersAndPin = new long[2][15];
     static long creditCardNumber;
     static int accountNumber;
     static int bankIDNumber;
     static int checkSum;
+    static long CCWithoutChecksumNum;
+    static String CCWithoutChecksum;
+    static int[] CCBeforeCheckSum = new int[15];
+    static String ccNum;
+
+
 
     public static void generateCreditCard() {
         bankIDNumber = 400_000;
         accountNumber = random.nextInt(900_000_000) + 100_000_000;
-        checkSum = random.nextInt(10);
         pin = random.nextInt(9000) + 1000;
 
         String firstPart = Integer.toString(bankIDNumber);
         String secondPart = Integer.toString(accountNumber);
-        String lastPart = Integer.toString(checkSum);
-        String creditCardNum = firstPart + secondPart + lastPart;
-
-        creditCardNumber = Long.valueOf(creditCardNum);
+        //String lastPart = Integer.toString(checkSum);
+        CCWithoutChecksum = firstPart + secondPart;
+        generateChecksum();
+        ccNum = CCWithoutChecksum + Integer.toString(checkSum);
+        storeCreditCard(Long.valueOf(ccNum));
+        
         System.out.println("Your card has been created");
-        System.out.println("Your card number: \n" + creditCardNumber);
+        System.out.println("Your card number: \n" + ccNum);
         System.out.println("Your card PIN: \n" + pin);
 
     }
+
+    public static void generateChecksum() {
+        //this will split the card number (not including checksum) into separate digits
+        for (int i = 0; i < CCWithoutChecksum.length(); i++) {
+            CCBeforeCheckSum[i] = Character.getNumericValue(CCWithoutChecksum.charAt(i));
+        }
+
+        // Luhns Algorithm
+
+        //1st step: Multiply even indexes by 2
+
+        for (int i = 0; i < CCWithoutChecksum.length(); i++) {
+            if ( i % 2 == 0) {
+                CCBeforeCheckSum[i] = CCBeforeCheckSum[i] * 2;
+            }
+        }
+
+        //2nd step: Subtract 9 from elements greater than 9
+        for (int i = 0; i < CCWithoutChecksum.length(); i++) {
+            if (CCBeforeCheckSum[i] > 9) {
+                CCBeforeCheckSum[i] = CCBeforeCheckSum[i] - 9;
+            }
+        }
+
+        //3rd step: Find sum of all elements in array
+        int sum = 0;
+        for (int number:CCBeforeCheckSum) {
+            sum += number;
+        }
+
+        //4th step: Assign checksum to cc number
+        if (sum % 10 == 0) {
+            checkSum = 0;
+        } else {
+            checkSum = 10 - (sum % 10);
+        }
+
+    }
+
 
     public static void storeCreditCard(long creditCardNumber) {
         acctNumbersAndPin[0][counter] = creditCardNumber;
         acctNumbersAndPin[1][counter] = pin;
         ++counter;
-        System.out.println(Arrays.deepToString(acctNumbersAndPin));
+
+        for (int i = 0; i < acctNumbersAndPin.length; i++) {
+            System.out.println(Arrays.toString(acctNumbersAndPin[i]) + " ");
+        }
     }
 
 
@@ -49,16 +98,11 @@ public class BankWebApp {
         selectedAction = input.nextInt();
 
         switch (selectedAction) {
-            //case 0 terminates the program
             case 0:
                 System.out.println("Bye!");
                 return;
-            //case 1 creates an account
             case 1:
                 generateCreditCard();
-                storeCreditCard(creditCardNumber);
-                //CreditCard cc1 = new CreditCard();
-                //CreditCard.storeCC(cc1.creditCardNumber);
                 break;
             case 2:
                 checkCredentials();
@@ -73,7 +117,6 @@ public class BankWebApp {
             System.out.println("Enter your PIN:");
             long userPin = input.nextLong();
 
-            //create a loop to check if login is accurate
 
             for (int i = 0; i < acctNumbersAndPin[0].length; i++) {
                 if (acctNumbersAndPin[0][i] == userCN) {
@@ -88,13 +131,10 @@ public class BankWebApp {
                     }
                 } else if (acctNumbersAndPin[0][i] != userCN) {
                     ++counter2;
-                    //checks all CN on file
                     if (acctNumbersAndPin[0][i] != userCN && counter2 == acctNumbersAndPin[0].length) {
                         System.out.println("Wrong card number or PIN!");
                         break;
                     }
-
-
                 }
             }
         }
@@ -121,5 +161,3 @@ public class BankWebApp {
         }
 
     }
-
-

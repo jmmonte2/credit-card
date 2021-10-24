@@ -21,6 +21,24 @@ public class BankWebApp {
     static String ccNum;
 
 
+    public static void showLoginScreen() {
+        System.out.println("1. Create an account");
+        System.out.println("2. Log into account");
+        System.out.println("0. Exit");
+        selectedAction = input.nextInt();
+
+        switch (selectedAction) {
+            case 0:
+                System.out.println("Bye!");
+                return;
+            case 1:
+                generateCreditCard();
+                break;
+            case 2:
+                checkCredentials();
+                break;
+        }
+    }
 
     public static void generateCreditCard() {
         bankIDNumber = 400_000;
@@ -34,7 +52,7 @@ public class BankWebApp {
         generateChecksum();
         ccNum = CCWithoutChecksum + Integer.toString(checkSum);
         storeCreditCard(Long.valueOf(ccNum));
-        
+
         System.out.println("Your card has been created");
         System.out.println("Your card number: \n" + ccNum);
         System.out.println("Your card PIN: \n" + pin);
@@ -91,24 +109,6 @@ public class BankWebApp {
     }
 
 
-    public static void showLoginScreen() {
-        System.out.println("1. Create an account");
-        System.out.println("2. Log into account");
-        System.out.println("0. Exit");
-        selectedAction = input.nextInt();
-
-        switch (selectedAction) {
-            case 0:
-                System.out.println("Bye!");
-                return;
-            case 1:
-                generateCreditCard();
-                break;
-            case 2:
-                checkCredentials();
-                break;
-        }
-    }
 
         public static void checkCredentials() {
             int counter2 = 0;

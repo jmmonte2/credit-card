@@ -42,4 +42,16 @@ public class Database {
         }
     }
 
+    public static void insert(long number, int pin) {
+        String sql = "INSERT INTO card(number,pin) VALUES(?,?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, number);
+            stmt.setInt(2, pin);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

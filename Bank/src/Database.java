@@ -27,7 +27,7 @@ public class Database {
     }
 
     public static void createNewTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS card (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS creditCard (\n"
                 + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + " number VARCHAR(16),\n"
                 + " pin VARCHAR(4),\n"
@@ -43,7 +43,7 @@ public class Database {
     }
 
     public static void insert(long number, int pin) {
-        String sql = "INSERT INTO card(number,pin) VALUES(?,?)";
+        String sql = "INSERT INTO creditCard(number,pin) VALUES(?,?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, number);

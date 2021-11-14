@@ -3,7 +3,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
-import java.util.Arrays;
 import java.util.Random;
 
 public class BankWebApp {
@@ -57,16 +56,21 @@ public class BankWebApp {
 
         String firstPart = Integer.toString(bankIDNumber);
         String secondPart = Integer.toString(accountNumber);
-        //String lastPart = Integer.toString(checkSum);
+
         CCWithoutChecksum = firstPart + secondPart;
         generateChecksum();
-        ccNum = CCWithoutChecksum + Integer.toString(checkSum);
-        storeCreditCard(Long.valueOf(ccNum));
+        ccNum = CCWithoutChecksum + checkSum;
+
+        storeCreditCard(Long.valueOf(ccNum),pin);
 
         System.out.println("Your card has been created");
         System.out.println("Your card number: \n" + ccNum);
         System.out.println("Your card PIN: \n" + pin);
-
+        try {
+            Database.conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void generateChecksum() {
@@ -98,7 +102,7 @@ public class BankWebApp {
             sum += number;
         }
 
-        //4th step: Assign checksum to cc number
+        //4th step: Assign value to checkSum
         if (sum % 10 == 0) {
             checkSum = 0;
         } else {
@@ -108,7 +112,7 @@ public class BankWebApp {
     }
 
 
-    public static void storeCreditCard(long creditCardNumber) {
+    public static void storeCreditCard(long creditCardNumber, int pin) {
         Database.insert(creditCardNumber,pin);
     }
 

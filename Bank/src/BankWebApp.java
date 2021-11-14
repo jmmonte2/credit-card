@@ -1,4 +1,5 @@
 
+import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.Random;
@@ -32,7 +33,14 @@ public class BankWebApp {
                 System.out.println("Bye!");
                 return;
             case 1:
+                Database.connect();
+                Database.createNewTable();
                 generateCreditCard();
+                try {
+                    Database.conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
             case 2:
                 checkCredentials();
@@ -99,13 +107,7 @@ public class BankWebApp {
 
 
     public static void storeCreditCard(long creditCardNumber) {
-        acctNumbersAndPin[0][counter] = creditCardNumber;
-        acctNumbersAndPin[1][counter] = pin;
-        ++counter;
-
-        for (int i = 0; i < acctNumbersAndPin.length; i++) {
-            System.out.println(Arrays.toString(acctNumbersAndPin[i]) + " ");
-        }
+        Database.insert(creditCardNumber,pin);
     }
 
 

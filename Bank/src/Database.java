@@ -25,4 +25,21 @@ public class Database {
         }
 
     }
+
+    public static void createNewTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS card (\n"
+                + " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                + " number VARCHAR(16),\n"
+                + " pin VARCHAR(4),\n"
+                + " balance INTEGER DEFAULT O\n"
+                + ");";
+
+        try (Statement stmt = Database.conn.createStatement()) {
+            // create a new table
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

@@ -1,5 +1,7 @@
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.Random;
@@ -112,36 +114,39 @@ public class BankWebApp {
 
 
 
-        public static void checkCredentials() {
-            int counter2 = 0;
+    public static void checkCredentials() {
             System.out.println("Enter your card number:");
             long userCN = input.nextLong();
             System.out.println("Enter your PIN:");
             long userPin = input.nextLong();
 
+            Database.connect();
+            String sql = "SELECT pin FROM card WHERE number =" + userCN;
+            try (Statement stmt1 = Database.conn.createStatement();
+                 ResultSet rs    = stmt1.executeQuery(sql)) {
+                rs.next();
+                if (rs.getInt("pin") == userPin) {
+                    System.out.println("You have successfully logged in!");
+                    showAccountDetails();
 
-            for (int i = 0; i < acctNumbersAndPin[0].length; i++) {
-                if (acctNumbersAndPin[0][i] == userCN) {
-                    if (acctNumbersAndPin[1][i] == userPin) {
-                        System.out.println("You have successfully logged in!");
-                        showAccountDetails();
-                        break;
-                    } else if (acctNumbersAndPin[1][i] != userPin) {
-                        System.out.println("Wrong card number or PIN!");
-                        break;
+                } else {
+                    System.out.println("Wrong card number or PIN!");
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+                System.out.println("Wrong card number or PIN!");
 
-                    }
-                } else if (acctNumbersAndPin[0][i] != userCN) {
-                    ++counter2;
-                    if (acctNumbersAndPin[0][i] != userCN && counter2 == acctNumbersAndPin[0].length) {
-                        System.out.println("Wrong card number or PIN!");
-                        break;
-                    }
+            } finally {
+                try {
+                    Database.conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
-        }
 
-        public static void showAccountDetails() {
+    }
+
+    public static void showAccountDetails() {
             int selectedAction2;
             do {
                 System.out.println("1. Balance");
@@ -160,6 +165,6 @@ public class BankWebApp {
                         break;
                 }
             } while (selectedAction2 == 1);
-        }
+    }
 
     }

@@ -4,23 +4,23 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 import java.util.Random;
+import static java.lang.System.exit;
+
 
 public class BankWebApp {
 
     static Scanner input = new Scanner(System.in);
     static int selectedAction;
     static int pin;
-    static int counter = 0;
     static Random random = new Random();
-    static long[][] acctNumbersAndPin = new long[2][15];
-    static long creditCardNumber;
+
     static int accountNumber;
     static int bankIDNumber;
     static int checkSum;
-    static long CCWithoutChecksumNum;
     static String CCWithoutChecksum;
     static int[] CCBeforeCheckSum = new int[15];
     static String ccNum;
+    static int selectedAction2;
 
 
     public static void showLoginScreen() {
@@ -151,7 +151,6 @@ public class BankWebApp {
     }
 
     public static void showAccountDetails() {
-            int selectedAction2;
             do {
                 System.out.println("1. Balance");
                 System.out.println("2. Log out");
@@ -160,6 +159,7 @@ public class BankWebApp {
 
                 switch (selectedAction2) {
                     case 0:
+                        exit(0);
                         return;
                     case 1:
                         System.out.println("Balance: 0");
